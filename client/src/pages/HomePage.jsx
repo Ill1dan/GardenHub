@@ -13,12 +13,20 @@ const HomePage = () => {
                     <div>
                         <p className="text-xl mb-4">Hello, <span className="font-semibold">{user.name}</span>!</p>
                         <p className="text-gray-600 mb-6">Role: {user.role}</p>
-                        <button
-                            onClick={logout}
-                            className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition"
-                        >
-                            Logout
-                        </button>
+                        <div className="flex space-x-4 justify-center">
+                            <Link
+                                to="/dashboard"
+                                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+                            >
+                                Go to Dashboard
+                            </Link>
+                            <button
+                                onClick={logout}
+                                className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition"
+                            >
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <div className="space-x-4">
