@@ -1,12 +1,20 @@
 import { MessageCircle, Heart, Share2 } from 'lucide-react';
 
-const CommunityPreview = ({ author, time, title, content, tags, likes, comments }) => {
+const CommunityPreview = ({ author, authorImage, time, title, content, tags, likes, comments }) => {
     return (
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div className="flex items-center mb-3">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-200 to-emerald-300 flex items-center justify-center text-green-800 font-bold text-sm">
-                    {author.charAt(0)}
-                </div>
+                {authorImage ? (
+                    <img
+                        src={authorImage}
+                        alt={author}
+                        className="h-10 w-10 rounded-full object-cover border-2 border-green-100"
+                    />
+                ) : (
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-200 to-emerald-300 flex items-center justify-center text-green-800 font-bold text-sm">
+                        {author.charAt(0)}
+                    </div>
+                )}
                 <div className="ml-3">
                     <p className="text-sm font-semibold text-gray-800">{author}</p>
                     <p className="text-xs text-gray-400">{time}</p>

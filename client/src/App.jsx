@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage';
 import UserDashboard from './pages/UserDashboard';
 import GardenerDashboard from './pages/GardenerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -13,9 +14,37 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/gardener-dashboard" element={<GardenerDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
+          {/* Viewer Dashboard: Only for Viewers */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['viewer']}>
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Gardener Dashboard: For Gardeners and Experts */}
+          <Route
+            path="/gardener-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['gardener', 'expert']}>
+                <GardenerDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Dashboard: Only for Admin */}
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>

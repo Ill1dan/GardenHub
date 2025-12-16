@@ -53,9 +53,48 @@ const LoginPage = () => {
                         Login
                     </button>
                 </form>
-                <p className="mt-4 text-center text-gray-600">
+                <p className="mt-4 text-center text-gray-600 mb-6">
                     Don't have an account? <Link to="/register" className="text-green-600 hover:underline">Register</Link>
                 </p>
+
+                {/* Demo Accounts Section */}
+                <div className="mt-6 border-t pt-4">
+                    <p className="text-sm text-gray-500 text-center mb-3">Demo Accounts (Click to Auto-fill)</p>
+                    <div className="grid grid-cols-1 gap-2">
+                        <button
+                            onClick={() => { setEmail('viewer@gardenhub.com'); setPassword('password123'); }}
+                            className="text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 text-xs flex justify-between items-center group"
+                        >
+                            <div>
+                                <span className="font-bold text-gray-700 block">User (Viewer)</span>
+                                <span className="text-gray-500">viewer@gardenhub.com</span>
+                            </div>
+                            <span className="text-green-600 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Use »</span>
+                        </button>
+
+                        <button
+                            onClick={() => { setEmail('gardener@gardenhub.com'); setPassword('password123'); }}
+                            className="text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 text-xs flex justify-between items-center group"
+                        >
+                            <div>
+                                <span className="font-bold text-green-700 block">Gardener</span>
+                                <span className="text-gray-500">gardener@gardenhub.com</span>
+                            </div>
+                            <span className="text-green-600 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Use »</span>
+                        </button>
+
+                        <button
+                            onClick={() => { setEmail('admin@gardenhub.com'); setPassword('adminpassword'); }}
+                            className="text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 text-xs flex justify-between items-center group"
+                        >
+                            <div>
+                                <span className="font-bold text-purple-700 block">Admin</span>
+                                <span className="text-gray-500">admin@gardenhub.com</span>
+                            </div>
+                            <span className="text-green-600 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Use »</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

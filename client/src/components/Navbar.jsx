@@ -10,8 +10,16 @@ const Navbar = () => {
 
     const isActive = (path) => location.pathname === path;
 
+    const getDashboardPath = () => {
+        if (!user) return '/login';
+        if (user.role === 'admin') return '/admin-dashboard';
+        if (user.role === 'gardener' || user.role === 'expert') return '/gardener-dashboard';
+        return '/dashboard';
+    };
+
     const navLinks = [
         { name: 'Home', path: '/' },
+        ...(user ? [{ name: 'Dashboard', path: getDashboardPath() }] : []),
         { name: 'Gardeners', path: '/gardeners' },
         { name: 'Shop', path: '/shop' },
         { name: 'Service', path: '/services' },
@@ -41,8 +49,8 @@ const Navbar = () => {
                                 key={link.path}
                                 to={link.path}
                                 className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${isActive(link.path)
-                                        ? 'text-green-700 bg-green-50'
-                                        : 'text-gray-600 hover:text-green-600 hover:bg-green-50/50'
+                                    ? 'text-green-700 bg-green-50'
+                                    : 'text-gray-600 hover:text-green-600 hover:bg-green-50/50'
                                     }`}
                             >
                                 {link.name}
@@ -59,14 +67,22 @@ const Navbar = () => {
                                     <span className="text-xs text-green-600 font-medium capitalize">{user.role}</span>
                                 </div>
                                 <div className="relative group cursor-pointer">
-                                    <div className="bg-green-100 p-2 rounded-full border border-green-200 group-hover:border-green-300 transition">
-                                        <User className="h-5 w-5 text-green-700" />
-                                    </div>
+                                    {user.profilePicture ? (
+                                        <img
+                                            src={user.profilePicture}
+                                            alt={user.name}
+                                            className="h-10 w-10 rounded-full border-2 border-green-200 object-cover group-hover:border-green-400 transition"
+                                        />
+                                    ) : (
+                                        <div className="bg-green-100 p-2 rounded-full border border-green-200 group-hover:border-green-300 transition">
+                                            <User className="h-5 w-5 text-green-700" />
+                                        </div>
+                                    )}
                                     {/* Dropdown could go here */}
                                 </div>
                                 <button
                                     onClick={logout}
-                                    className="hidden md:block text-sm text-gray-500 hover:text-red-600 transition ml-2"
+                                    className="hidden md:block text-sm text-gray-500 hover:text-red-600 transition ml-2 cursor-pointer"
                                 >
                                     Log out
                                 </button>
@@ -100,8 +116,8 @@ const Navbar = () => {
                                 key={link.path}
                                 to={link.path}
                                 className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(link.path)
-                                        ? 'text-green-700 bg-green-50'
-                                        : 'text-gray-600 hover:text-green-600 hover:bg-gray-50'
+                                    ? 'text-green-700 bg-green-50'
+                                    : 'text-gray-600 hover:text-green-600 hover:bg-gray-50'
                                     }`}
                                 onClick={() => setIsOpen(false)}
                             >

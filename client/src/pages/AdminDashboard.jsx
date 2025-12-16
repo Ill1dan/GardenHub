@@ -1,29 +1,112 @@
-import { Users, Eye, Shovel, Search, Filter, Edit2, Trash2, MoreVertical, Activity, ChevronRight, TrendingUp, TrendingDown, ArrowUpRight } from 'lucide-react';
+import { Users, Eye, Shovel, Search, Filter, Edit2, Trash2, MoreVertical, Activity, ChevronRight, TrendingUp, TrendingDown, ArrowUpRight, Shield, UserX, XCircle, CheckCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useState, useEffect, useContext } from 'react';
+import AuthContext from '../context/AuthContext';
 
 const AdminDashboard = () => {
-    // Mock Data
-    const users = [
-        { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Viewer', experience: 'N/A', joinDate: '2024-01-15', status: 'Active' },
-        { id: 2, name: 'Alice Smith', email: 'alice@garden.com', role: 'Gardener', experience: '5 Years', joinDate: '2024-02-01', status: 'Active' },
-        { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'Viewer', experience: 'N/A', joinDate: '2024-02-10', status: 'Inactive' },
-        { id: 4, name: 'Emma Brown', email: 'emma@garden.com', role: 'Gardener', experience: '2 Years', joinDate: '2024-03-05', status: 'Active' },
-        { id: 5, name: 'Charlie Day', email: 'charlie@example.com', role: 'Viewer', experience: 'N/A', joinDate: '2024-03-20', status: 'Active' },
+    const { user: currentUser } = useContext(AuthContext);
+    const [users, setUsers] = useState([]);
+    const [stats, setStats] = useState({ totalUsers: 0, viewers: 0, gardeners: 0, experts: 0 });
+    const [activities, setActivities] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [token, setToken] = useState(localStorage.getItem('token'));
+
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const usersPerPage = 10;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch Users
+                const usersRes = await fetch('http://localhost:5000/api/users', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const usersData = await usersRes.json();
+
+                if (usersRes.ok) {
+                    setUsers(usersData);
+                }
+
+                // Fetch Stats
+                const statsRes = await fetch('http://localhost:5000/api/users/stats', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const statsData = await statsRes.json();
+                if (statsRes.ok) {
+                    setStats(statsData);
+                }
+
+                // Fetch Activity Logs
+                const logsRes = await fetch('http://localhost:5000/api/users/activity', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const logsData = await logsRes.json();
+                if (logsRes.ok) {
+                    setActivities(logsData);
+                }
+
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching admin data:", error);
+                setLoading(false);
+            }
+        };
+
+        if (token) {
+            fetchData();
+        }
+    }, [token]);
+
+    const handleBanUser = async (userId, currentStatus) => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/users/${userId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ isBanned: !currentStatus })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                // Update local state
+                setUsers(users.map(u => u._id === userId ? { ...u, isBanned: data.isBanned } : u));
+            }
+        } catch (error) {
+            console.error("Error banning user:", error);
+        }
+    };
+
+    const handleUpgradeRole = async (userId, newRole) => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/users/${userId}/role`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ role: newRole })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                // Update local state
+                setUsers(users.map(u => u._id === userId ? { ...u, role: data.role } : u));
+                // Refresh stats roughly or re-fetch
+            }
+        } catch (error) {
+            console.error("Error upgrading user:", error);
+        }
+    };
+
+    const statsCards = [
+        { title: 'Total Users', count: stats.totalUsers, icon: Users, color: 'blue', trend: '+12%', trendUp: true },
+        { title: 'Viewers', count: stats.viewers, icon: Eye, color: 'purple', trend: '+5%', trendUp: true },
+        { title: 'Gardeners', count: stats.gardeners, icon: Shovel, color: 'green', trend: '-2%', trendUp: false },
     ];
 
-    const stats = [
-        { title: 'Total Users', count: 1250, icon: Users, color: 'blue', trend: '+12%', trendUp: true },
-        { title: 'Viewers', count: 850, icon: Eye, color: 'purple', trend: '+5%', trendUp: true },
-        { title: 'Gardeners', count: 400, icon: Shovel, color: 'green', trend: '-2%', trendUp: false },
-    ];
-
-    const activities = [
-        { id: 1, text: 'New gardener registered: David Ko', time: '10 min ago', color: 'bg-green-100 text-green-700' },
-        { id: 2, text: 'User report: Bug in payment flow', time: '1h ago', color: 'bg-red-100 text-red-700' },
-        { id: 3, text: 'System backup completed', time: '3h ago', color: 'bg-blue-100 text-blue-700' },
-        { id: 4, text: 'New post flagged in Community', time: '5h ago', color: 'bg-yellow-100 text-yellow-700' },
-    ];
+    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
     return (
         <div className="min-h-screen flex flex-col bg-[#f3f4f6] font-sans text-gray-900 selection:bg-green-100 selection:text-green-900">
@@ -35,9 +118,6 @@ const AdminDashboard = () => {
                         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">User Management</h1>
                         <p className="text-gray-500 mt-1">Manage platform users, roles, and permissions.</p>
                     </div>
-                    <button className="hidden sm:flex items-center text-sm font-medium text-green-600 hover:text-green-700">
-                        View System Health <ArrowUpRight className="ml-1 h-4 w-4" />
-                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -45,53 +125,25 @@ const AdminDashboard = () => {
                     <div className="lg:col-span-3 space-y-8">
                         {/* Stats Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {stats.map((stat, index) => (
+                            {statsCards.map((stat, index) => (
                                 <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">{stat.title}</p>
                                             <div className="flex items-baseline mt-1 space-x-2">
                                                 <h3 className="text-3xl font-bold text-gray-900">{stat.count}</h3>
-                                                <span className={`flex items-center text-xs font-semibold px-2 py-0.5 rounded-full ${stat.trendUp ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
-                                                    {stat.trendUp ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-                                                    {stat.trend}
-                                                </span>
                                             </div>
                                         </div>
                                         <div className={`p-3 rounded-full bg-${stat.color}-50`}>
                                             <stat.icon className={`h-6 w-6 text-${stat.color}-600`} />
                                         </div>
                                     </div>
-                                    <p className="text-xs text-gray-400 mt-4">vs last month</p>
                                 </div>
                             ))}
                         </div>
 
                         {/* Filter & Table Section */}
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                            {/* Filters */}
-                            <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div className="relative flex-grow max-w-md">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <Search className="h-5 w-5 text-gray-400" />
-                                    </div>
-                                    <input
-                                        type="text"
-                                        className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm transition-colors"
-                                        placeholder="Search users..."
-                                    />
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <button className="flex items-center px-4 py-2.5 border border-gray-200 rounded-lg text-gray-600 bg-white hover:bg-gray-50 text-sm font-medium transition-colors">
-                                        <Filter className="h-4 w-4 mr-2" />
-                                        Filters
-                                    </button>
-                                    <button className="flex items-center px-4 py-2.5 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-700 text-sm font-medium shadow-sm transition-colors">
-                                        + User
-                                    </button>
-                                </div>
-                            </div>
-
                             {/* Table */}
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
@@ -105,42 +157,79 @@ const AdminDashboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {users.map((user) => (
-                                            <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                                        {users.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage).map((u) => (
+                                            <tr key={u._id} className="hover:bg-gray-50 transition-colors">
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <div className="flex-shrink-0 h-10 w-10">
-                                                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-100 to-emerald-200 flex items-center justify-center text-green-700 font-bold">
-                                                                {user.name.charAt(0)}
-                                                            </div>
+                                                            {u.profilePicture ? (
+                                                                <img className="h-10 w-10 rounded-full object-cover border border-green-200" src={u.profilePicture} alt="" />
+                                                            ) : (
+                                                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-100 to-emerald-200 flex items-center justify-center text-green-700 font-bold">
+                                                                    {u.name.charAt(0)}
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                        <div className="ml-4">
-                                                            <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                                                            <div className="text-sm text-gray-500">{user.email}</div>
+                                                        <div className="ml-4 max-w-[150px] sm:max-w-[200px]">
+                                                            <div className="text-sm font-medium text-gray-900 truncate" title={u.name}>{u.name}</div>
+                                                            <div className="text-sm text-gray-500 truncate" title={u.email}>{u.email}</div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === 'Gardener' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
-                                                        {user.role}
+                                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.role === 'gardener' ? 'bg-green-100 text-green-800' : u.role === 'expert' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
+                                                        {u.role}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {user.joinDate}
+                                                    {new Date(u.createdAt).toLocaleDateString()}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 py-1 inline-flex text-xs font-semibold rounded-full ${user.status === 'Active' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
-                                                        {user.status}
-                                                    </span>
+                                                    {u.isBanned ? (
+                                                        <span className="px-2 py-1 inline-flex text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                                            Banned
+                                                        </span>
+                                                    ) : (
+                                                        <span className="px-2 py-1 inline-flex text-xs font-semibold rounded-full bg-green-50 text-green-700 border border-green-200">
+                                                            Active
+                                                        </span>
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                     <div className="flex items-center justify-end space-x-2">
-                                                        <button className="text-gray-400 hover:text-green-600 transition-colors p-1 rounded-full hover:bg-gray-100">
-                                                            <Edit2 className="h-4 w-4" />
+
+                                                        {/* Upgrade Role (Gardener -> Expert) */}
+                                                        {u.role === 'gardener' && !u.isBanned && (
+                                                            <button
+                                                                onClick={() => handleUpgradeRole(u._id, 'expert')}
+                                                                className="text-purple-600 hover:text-purple-900 flex items-center bg-purple-50 px-2 py-1 rounded"
+                                                                title="Upgrade to Expert"
+                                                            >
+                                                                <Shield className="h-3 w-3 mr-1" /> Upgrade
+                                                            </button>
+                                                        )}
+
+                                                        {/* Demote Role (Expert -> Gardener) */}
+                                                        {u.role === 'expert' && !u.isBanned && (
+                                                            <button
+                                                                onClick={() => handleUpgradeRole(u._id, 'gardener')}
+                                                                className="text-amber-600 hover:text-amber-900 flex items-center bg-amber-50 px-2 py-1 rounded"
+                                                                title="Demote to Gardener"
+                                                            >
+                                                                <TrendingDown className="h-3 w-3 mr-1" /> Demote
+                                                            </button>
+                                                        )}
+
+                                                        {/* Ban/Unban */}
+                                                        <button
+                                                            onClick={() => handleBanUser(u._id, u.isBanned)}
+                                                            className={`flex items-center px-2 py-1 rounded ${u.isBanned ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-red-600 bg-red-50 hover:bg-red-100'}`}
+                                                            title={u.isBanned ? "Unban User" : "Ban User"}
+                                                        >
+                                                            {u.isBanned ? <CheckCircle className="h-3 w-3 mr-1" /> : <XCircle className="h-3 w-3 mr-1" />}
+                                                            {u.isBanned ? "Unban" : "Ban"}
                                                         </button>
-                                                        <button className="text-gray-400 hover:text-red-600 transition-colors p-1 rounded-full hover:bg-gray-100">
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </button>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -149,40 +238,57 @@ const AdminDashboard = () => {
                                 </table>
                             </div>
 
-                            {/* Pagination (Mock UI) */}
-                            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-                                <span className="text-sm text-gray-500">Showing <span className="font-medium">1-5</span> of <span className="font-medium">24</span> results</span>
-                                <div className="flex space-x-2">
-                                    <button className="px-3 py-1 border border-gray-200 rounded-md text-sm text-gray-500 disabled:opacity-50" disabled>Previous</button>
-                                    <button className="px-3 py-1 border border-gray-200 rounded-md text-sm text-gray-900 hover:bg-gray-50">Next</button>
+                            {/* Pagination Controls */}
+                            <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                                <div className="flex-1 flex justify-between items-center">
+                                    <button
+                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPage === 1}
+                                        className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
+                                        Previous
+                                    </button>
+                                    <span className="text-sm text-gray-700">
+                                        Page <span className="font-medium">{currentPage}</span> of <span className="font-medium">{Math.ceil(users.length / usersPerPage)}</span>
+                                    </span>
+                                    <button
+                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(users.length / usersPerPage)))}
+                                        disabled={currentPage === Math.ceil(users.length / usersPerPage)}
+                                        className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ${currentPage === Math.ceil(users.length / usersPerPage) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
+                                        Next
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     {/* Sidebar: Activity Log */}
                     <div className="lg:col-span-1 space-y-6">
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                             <h3 className="font-bold text-gray-800 text-lg mb-4 flex items-center">
                                 <Activity className="h-5 w-5 mr-2 text-green-600" />
-                                Activity Log
+                                System Activity
                             </h3>
-                            <div className="space-y-6 relative">
+                            <div className="space-y-6 relative ml-2">
                                 {/* Vertical Line */}
                                 <div className="absolute left-2.5 top-2 bottom-2 w-0.5 bg-gray-100"></div>
 
-                                {activities.map((activity) => (
-                                    <div key={activity.id} className="relative pl-8">
-                                        <div className={`absolute left-0 top-1 h-5 w-5 rounded-full border-2 border-white shadow-sm flex items-center justify-center ${activity.color.split(' ')[0]}`}>
+                                {activities.length === 0 ? (
+                                    <p className="text-sm text-gray-500 pl-8">No recent activity</p>
+                                ) : (
+                                    activities.map((activity) => (
+                                        <div key={activity._id} className="relative pl-8">
+                                            <div className={`absolute left-0 top-1 h-5 w-5 rounded-full border-2 border-white shadow-sm flex items-center justify-center ${activity.type === 'success' ? 'bg-green-100 text-green-700' :
+                                                activity.type === 'error' ? 'bg-red-100 text-red-700' :
+                                                    'bg-blue-100 text-blue-700'
+                                                }`}>
+                                            </div>
+                                            <p className="text-sm text-gray-800 font-medium leading-tight">{activity.text}</p>
+                                            <span className="text-xs text-gray-400 block mt-1">{new Date(activity.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                         </div>
-                                        <p className="text-sm text-gray-800 font-medium leading-tight">{activity.text}</p>
-                                        <span className="text-xs text-gray-400 block mt-1">{activity.time}</span>
-                                    </div>
-                                ))}
+                                    ))
+                                )}
                             </div>
-                            <button className="mt-6 w-full py-2 bg-gray-50 text-gray-600 font-medium text-sm rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center">
-                                View History
-                            </button>
                         </div>
                     </div>
                 </div>

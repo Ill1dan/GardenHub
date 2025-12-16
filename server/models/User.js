@@ -23,6 +23,14 @@ const userSchema = new mongoose.Schema({
         enum: ['viewer', 'gardener', 'admin', 'expert'],
         default: 'viewer',
     },
+    isBanned: {
+        type: Boolean,
+        default: false,
+    },
+    profilePicture: {
+        type: String,
+        default: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=150&q=80', // Neutral profile placeholder
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

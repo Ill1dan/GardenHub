@@ -77,6 +77,7 @@ const UserDashboard = () => {
                             title="My Tomato plant is finally fruiting! 🍅"
                             content="After 3 months of care and using the recommended fertilizer, I finally see these beauties. Check out the progress..."
                             author="Sarah Jenkins"
+                            authorImage="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80"
                             time="2h ago"
                             tags={['Vegetables', 'Organic']}
                             likes={124}
@@ -86,6 +87,7 @@ const UserDashboard = () => {
                             title="Best indoor plants for low light?"
                             content="I have a north-facing window and want to add some greenery. Any suggestions for bomb-proof houseplants?"
                             author="Mike Chen"
+                            authorImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
                             time="5h ago"
                             tags={['Indoor', 'Advice']}
                             likes={45}
@@ -95,6 +97,7 @@ const UserDashboard = () => {
                             title="DIY Automatic Watering System"
                             content="Built this simple gravity-fed system for my balcony using recycled bottles. Here are the plans for anyone interested."
                             author="Alex Rivera"
+                            authorImage="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80"
                             time="1d ago"
                             tags={['DIY', 'Tips']}
                             likes={892}
