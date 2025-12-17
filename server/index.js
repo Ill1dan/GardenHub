@@ -1,9 +1,11 @@
+// Server Entry Point - Force Restart
 import express from 'express';
 import connectDB from './config/db.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
 import userRoutes from './routes/userRoutes.js';
+import shopRoutes from './routes/shopRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -15,6 +17,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/users', userRoutes);
+app.use('/api/shop', shopRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {

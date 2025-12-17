@@ -22,6 +22,25 @@ const shopItemSchema = new mongoose.Schema({
     image_url: {
         type: String,
     },
+    sales: {
+        type: Number,
+        default: 0
+    },
+    // For now, embedding gardener info to match the requested dummy data structure directly.
+    // In a future iteration, this could be a reference to the User model.
+    gardener: {
+        name: { type: String, required: true },
+        rating: { type: Number, default: 0 }
+    },
+    gardener_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        // required: true // Making it optional for now to support old seed data without it, or we should update seed
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 const orderItemSchema = new mongoose.Schema({
@@ -43,7 +62,7 @@ const orderItemSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-}, { _id: false }); // Embeds don't necessarily need their own ID if just data
+}, { _id: false });
 
 const orderSchema = new mongoose.Schema({
     user_id: {

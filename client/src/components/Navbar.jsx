@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Leaf, User, Menu, X } from 'lucide-react';
 import { useContext, useState } from 'react';
 import AuthContext from '../context/AuthContext';
@@ -6,6 +6,7 @@ import AuthContext from '../context/AuthContext';
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
     const location = useLocation();
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
     const isActive = (path) => location.pathname === path;
@@ -15,6 +16,11 @@ const Navbar = () => {
         if (user.role === 'admin') return '/admin-dashboard';
         if (user.role === 'gardener' || user.role === 'expert') return '/gardener-dashboard';
         return '/dashboard';
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
     };
 
     const navLinks = [
@@ -81,7 +87,7 @@ const Navbar = () => {
                                     {/* Dropdown could go here */}
                                 </div>
                                 <button
-                                    onClick={logout}
+                                    onClick={handleLogout}
                                     className="hidden md:block text-sm text-gray-500 hover:text-red-600 transition ml-2 cursor-pointer"
                                 >
                                     Log out

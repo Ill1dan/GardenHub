@@ -38,4 +38,12 @@ const admin = (req, res, next) => {
     }
 };
 
-export { protect, admin };
+const gardener = (req, res, next) => {
+    if (req.user && (req.user.role === 'gardener' || req.user.role === 'admin' || req.user.role === 'expert')) {
+        next();
+    } else {
+        res.status(401).json({ message: 'Not authorized as a gardener' });
+    }
+};
+
+export { protect, admin, gardener };

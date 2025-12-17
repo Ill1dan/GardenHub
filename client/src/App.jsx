@@ -6,6 +6,8 @@ import RegisterPage from './pages/RegisterPage';
 import UserDashboard from './pages/UserDashboard';
 import GardenerDashboard from './pages/GardenerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import ShopPage from './pages/ShopPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/shop/:id" element={<ProductDetailsPage />} />
 
           {/* Viewer Dashboard: Only for Viewers */}
           <Route
