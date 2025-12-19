@@ -8,6 +8,7 @@ import GardenerDashboard from './pages/GardenerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ShopPage from './pages/ShopPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
+import RegionalGardening from './pages/RegionalGardening';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/shop/:id" element={<ProductDetailsPage />} />
+          <Route path="/regional-gardening" element={<RegionalGardening />} />
 
           {/* Viewer Dashboard: Only for Viewers */}
           <Route
