@@ -9,6 +9,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import ShopPage from './pages/ShopPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import RegionalGardening from './pages/RegionalGardening';
+import GardenerPage from './pages/GardenerPage';
+import UserProfile from './pages/UserProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -17,6 +19,15 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute allowedRoles={['viewer', 'gardener', 'expert', 'admin']}>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/gardeners" element={<GardenerPage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/shop/:id" element={<ProductDetailsPage />} />
           <Route path="/regional-gardening" element={<RegionalGardening />} />

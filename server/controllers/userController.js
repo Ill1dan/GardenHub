@@ -104,6 +104,18 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+// @desc    Get all gardeners
+// @route   GET /api/users/gardeners
+// @access  Public
+const getGardeners = async (req, res) => {
+    try {
+        const gardeners = await User.find({ role: 'gardener' }).select('-password').sort({ createdAt: -1 });
+        res.json(gardeners);
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 // @desc    Ban/Unban user
 // @route   PUT /api/users/:id/status
 // @access  Private/Admin
@@ -176,4 +188,45 @@ const getSystemLogs = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, getMe, getAllUsers, updateUserStatus, updateUserRole, getDashboardStats, getSystemLogs };
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            user.name = req.body.name || user.name;
+            user.email = req.body.email || user.email;
+            user.phone = req.body.phone || user.phone;
+            user.profilePicture = req.body.profilePicture || user.profilePicture;
+
+            if (req.body.password) {
+                // Determine if we need to hash the password
+                // The User model likely has a pre-save hook for hashing, but let's check or just re-hash here if we want to be explicit.
+                // Assuming the User model handles it or we do it here. 
+                // Looking at registerUser, it does manual hashing. So we should probably do it here too if password is changed.
+                const salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(req.body.password, salt);
+            }
+
+            const updatedUser = await user.save();
+
+            res.json({
+                _id: updatedUser._id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+                role: updatedUser.role,
+                phone: updatedUser.phone,
+                profilePicture: updatedUser.profilePicture,
+                token: generateToken(updatedUser._id, updatedUser.role),
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+export { registerUser, loginUser, getMe, getAllUsers, getGardeners, updateUserStatus, updateUserRole, getDashboardStats, getSystemLogs, updateUserProfile };

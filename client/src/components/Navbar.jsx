@@ -73,17 +73,19 @@ const Navbar = () => {
                                     <span className="text-xs text-green-600 font-medium capitalize">{user.role}</span>
                                 </div>
                                 <div className="relative group cursor-pointer">
-                                    {user.profilePicture ? (
-                                        <img
-                                            src={user.profilePicture}
-                                            alt={user.name}
-                                            className="h-10 w-10 rounded-full border-2 border-green-200 object-cover group-hover:border-green-400 transition"
-                                        />
-                                    ) : (
-                                        <div className="bg-green-100 p-2 rounded-full border border-green-200 group-hover:border-green-300 transition">
-                                            <User className="h-5 w-5 text-green-700" />
-                                        </div>
-                                    )}
+                                    <Link to="/profile">
+                                        {user.profilePicture ? (
+                                            <img
+                                                src={user.profilePicture}
+                                                alt={user.name}
+                                                className="h-10 w-10 rounded-full border-2 border-green-200 object-cover group-hover:border-green-400 transition"
+                                            />
+                                        ) : (
+                                            <div className="bg-green-100 p-2 rounded-full border border-green-200 group-hover:border-green-300 transition">
+                                                <User className="h-5 w-5 text-green-700" />
+                                            </div>
+                                        )}
+                                    </Link>
                                     {/* Dropdown could go here */}
                                 </div>
                                 <button

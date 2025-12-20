@@ -67,6 +67,17 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateUser = (updatedUserData) => {
+        setUser(updatedUserData);
+        // If we want to persist updates to the token payload immediately without re-login, 
+        // we might not touch the token unless the backend issues a new one. 
+        // The backend `updateUserProfile` DOES return a new token.
+        if (updatedUserData.token) {
+            localStorage.setItem('token', updatedUserData.token);
+            setToken(updatedUserData.token);
+        }
+    };
+
     const logout = () => {
         localStorage.removeItem('token');
         setToken(null);
@@ -74,7 +85,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+        <AuthContext.Provider value={{ user, token, loading, login, register, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );
