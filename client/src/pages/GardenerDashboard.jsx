@@ -5,10 +5,12 @@ import FeatureCard from '../components/Dashboard/FeatureCard';
 import WeatherCard from '../components/Dashboard/WeatherCard';
 import ScheduleList from '../components/Dashboard/ScheduleList';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const GardenerDashboard = () => {
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
     const firstName = user ? user.name.split(' ')[0] : 'Gardener';
 
     return (
@@ -91,6 +93,27 @@ const GardenerDashboard = () => {
                                         </div>
                                     </div>
                                     <button className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition">Accept</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Forum / Community Section */}
+                        <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg border border-transparent p-6 text-white relative overflow-hidden">
+                            <div className="relative z-10 flex justify-between items-center">
+                                <div>
+                                    <h3 className="font-bold text-2xl mb-2">Join the Conversation! 🌿</h3>
+                                    <p className="text-green-50 mb-6 max-w-md">
+                                        Share your expert tips, answer questions, and connect with the gardening community in our dedicated forum.
+                                    </p>
+                                    <button
+                                        onClick={() => navigate('/forum')}
+                                        className="bg-white text-green-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-50 transition-colors cursor-pointer"
+                                    >
+                                        Visit Community Forum
+                                    </button>
+                                </div>
+                                <div className="hidden sm:block opacity-20 transform scale-150 rotate-12 translate-x-4">
+                                    <Briefcase className="h-40 w-40" />
                                 </div>
                             </div>
                         </div>

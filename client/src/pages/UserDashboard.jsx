@@ -5,10 +5,12 @@ import FeatureCard from '../components/Dashboard/FeatureCard';
 import CommunityPreview from '../components/Dashboard/CommunityPreview';
 import ExpertBanner from '../components/Dashboard/ExpertBanner';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const UserDashboard = () => {
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const firstName = user ? user.name.split(' ')[0] : 'Gardener';
 
@@ -69,7 +71,12 @@ const UserDashboard = () => {
                             <h2 className="text-2xl font-bold text-gray-900">Community Highlights</h2>
                             <p className="text-gray-500 mt-1">Trending tips and show-offs from fellow gardeners.</p>
                         </div>
-                        <button className="text-green-600 font-semibold hover:text-green-700 hover:underline">View all</button>
+                        <button
+                            onClick={() => navigate('/forum')}
+                            className="text-green-600 font-semibold hover:text-green-700 hover:underline cursor-pointer"
+                        >
+                            View all
+                        </button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

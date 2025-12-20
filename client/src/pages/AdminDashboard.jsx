@@ -1,11 +1,13 @@
-import { Users, Eye, Shovel, Search, Filter, Edit2, Trash2, MoreVertical, Activity, ChevronRight, TrendingUp, TrendingDown, ArrowUpRight, Shield, UserX, XCircle, CheckCircle } from 'lucide-react';
+import { Users, Eye, Shovel, Search, Filter, Edit2, Trash2, MoreVertical, Activity, ChevronRight, TrendingUp, TrendingDown, ArrowUpRight, Shield, UserX, XCircle, CheckCircle, MessageSquare, MessageCircle, ArrowRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const AdminDashboard = () => {
     const { user: currentUser } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [stats, setStats] = useState({ totalUsers: 0, viewers: 0, gardeners: 0, experts: 0 });
     const [activities, setActivities] = useState([]);
@@ -288,6 +290,30 @@ const AdminDashboard = () => {
                                         </div>
                                     ))
                                 )}
+                            </div>
+                        </div>
+
+                        {/* Forum Admin Link */}
+                        <div className="bg-gradient-to-br from-green-600 to-emerald-700 rounded-xl shadow-lg p-6 text-white relative overflow-hidden transition-all hover:shadow-xl duration-300">
+                            <div className="relative z-10">
+                                <h3 className="font-bold text-xl mb-2 flex items-center">
+                                    <MessageSquare className="h-6 w-6 mr-2 text-green-100" />
+                                    Community Hub
+                                </h3>
+                                <p className="text-green-50 text-sm mb-6 leading-relaxed">
+                                    Oversee discussions, moderate content, and engage with the gardening community.
+                                </p>
+                                <button
+                                    onClick={() => navigate('/forum')}
+                                    className="w-full flex items-center justify-center space-x-2 bg-white text-green-700 font-bold py-3 px-4 rounded-lg hover:bg-green-50 transition-all shadow-sm cursor-pointer transform active:scale-95"
+                                >
+                                    <span>Manage Forum</span>
+                                    <ArrowRight className="h-4 w-4" />
+                                </button>
+                            </div>
+                            {/* Decorative Background Icon */}
+                            <div className="absolute -bottom-6 -right-6 opacity-20 transform rotate-12">
+                                <MessageCircle className="h-32 w-32 text-white" />
                             </div>
                         </div>
                     </div>

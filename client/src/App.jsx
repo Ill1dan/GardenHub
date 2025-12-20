@@ -11,6 +11,7 @@ import ProductDetailsPage from './pages/ProductDetailsPage';
 import RegionalGardening from './pages/RegionalGardening';
 import GardenerPage from './pages/GardenerPage';
 import UserProfile from './pages/UserProfile';
+import ForumPage from './pages/ForumPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forum" element={<ForumPage />} />
         </Routes>
       </Router>
     </AuthProvider>
