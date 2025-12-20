@@ -130,6 +130,7 @@ const ProductDetailsPage = () => {
                                 src={product.image_url}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
+                                referrerPolicy="no-referrer"
                                 onError={(e) => {
                                     e.target.src = 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=600'; // Generic garden fallback
                                 }}
@@ -237,7 +238,7 @@ const ProductDetailsPage = () => {
                             <Link key={related._id} to={`/shop/${related._id}`} className="group block">
                                 <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all">
                                     <div className="aspect-square bg-gray-100 relative">
-                                        <img src={related.image_url} alt={related.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                                        <img src={related.image_url} alt={related.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" referrerPolicy="no-referrer" />
                                     </div>
                                     <div className="p-4">
                                         <h4 className="font-bold text-gray-900 group-hover:text-green-600 transition-colors truncate">{related.name}</h4>

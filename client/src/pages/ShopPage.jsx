@@ -35,7 +35,7 @@ const ShopPage = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                let url = `${API_BASE_URL} /api/shop`;
+                let url = `${API_BASE_URL}/api/shop`;
                 const params = new URLSearchParams();
 
                 if (sortBy === 'trending') {
@@ -46,7 +46,7 @@ const ShopPage = () => {
                 }
 
                 if (params.toString()) {
-                    url += `? ${params.toString()} `;
+                    url += `?${params.toString()}`;
                 }
 
                 console.log('Fetching products from:', url);
@@ -68,7 +68,7 @@ const ShopPage = () => {
         e.preventDefault();
         try {
             const config = { headers: { Authorization: `Bearer ${token} ` } };
-            await axios.post(`${API_BASE_URL} /api/shop`, newItem, config);
+            await axios.post(`${API_BASE_URL}/api/shop`, newItem, config);
             setShowAddItemModal(false);
             setNewItem({ name: '', price: '', stock: '', category: 'Flowers', description: '', image_url: '' });
             alert('Item added successfully!');
@@ -83,7 +83,7 @@ const ShopPage = () => {
     const handleAddStock = async (id) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token} ` } };
-            await axios.put(`${API_BASE_URL} /api/shop / ${id}/stock`, { quantity: stockToAdd }, config);
+            await axios.put(`${API_BASE_URL}/api/shop/${id}/stock`, { quantity: stockToAdd }, config);
             setUpdatingStock(null);
             setStockToAdd('');
             alert('Stock updated!');
@@ -438,6 +438,7 @@ const ShopPage = () => {
                                                 src={product.image_url}
                                                 alt={product.name}
                                                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                                                referrerPolicy="no-referrer"
                                                 onError={(e) => {
                                                     e.target.src = 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=600'; // Generic garden fallback
                                                 }}

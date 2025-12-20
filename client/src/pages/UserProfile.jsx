@@ -84,6 +84,7 @@ const UserProfile = () => {
                                         src={formData.profilePicture}
                                         alt={user.name}
                                         className="h-40 w-40 rounded-full border-[6px] border-white object-cover shadow-lg bg-white ring-1 ring-black/5"
+                                        referrerPolicy="no-referrer"
                                     />
                                 ) : (
                                     <div className="h-40 w-40 rounded-full border-[6px] border-white bg-green-100 flex items-center justify-center shadow-lg ring-1 ring-black/5">
