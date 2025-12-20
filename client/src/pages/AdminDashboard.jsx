@@ -3,10 +3,11 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 
 const AdminDashboard = () => {
-    const { user: currentUser } = useContext(AuthContext);
+    const { user: currentUser } = useAuth();
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [stats, setStats] = useState({ totalUsers: 0, viewers: 0, gardeners: 0, experts: 0 });
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
         const fetchData = async () => {
             try {
                 // Fetch Users
-                const usersRes = await fetch('http://localhost:5000/api/users', {
+                const usersRes = await fetch(`${API_BASE_URL}/api/users`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const usersData = await usersRes.json();
@@ -32,7 +33,7 @@ const AdminDashboard = () => {
                 }
 
                 // Fetch Stats
-                const statsRes = await fetch('http://localhost:5000/api/users/stats', {
+                const statsRes = await fetch(`${API_BASE_URL}/api/users/stats`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const statsData = await statsRes.json();
@@ -41,7 +42,7 @@ const AdminDashboard = () => {
                 }
 
                 // Fetch Activity Logs
-                const logsRes = await fetch('http://localhost:5000/api/users/activity', {
+                const logsRes = await fetch(`${API_BASE_URL}/api/users/activity`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const logsData = await logsRes.json();
@@ -63,7 +64,7 @@ const AdminDashboard = () => {
 
     const handleBanUser = async (userId, currentStatus) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/users/${userId}/status`, {
+            const res = await fetch(`${API_BASE_URL}/api/users/${userId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -83,7 +84,7 @@ const AdminDashboard = () => {
 
     const handleUpgradeRole = async (userId, newRole) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/users/${userId}/role`, {
+            const res = await fetch(`${API_BASE_URL}/api/users/${userId}/role`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

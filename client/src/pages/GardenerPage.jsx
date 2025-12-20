@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Mail, Phone, User, Calendar, Star, Leaf, Award, Search, MapPin, ArrowRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { API_BASE_URL } from '../config';
 
 const GardenerPage = () => {
     const [gardeners, setGardeners] = useState([]);
@@ -14,7 +15,7 @@ const GardenerPage = () => {
     useEffect(() => {
         const fetchGardeners = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/users/gardeners');
+                const response = await axios.get(`${API_BASE_URL}/api/users/gardeners`);
                 setGardeners(response.data);
                 setFilteredGardeners(response.data);
                 setLoading(false);

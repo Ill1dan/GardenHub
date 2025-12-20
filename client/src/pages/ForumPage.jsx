@@ -5,6 +5,7 @@ import CommunityPreview from '../components/Dashboard/CommunityPreview';
 import AuthContext from '../context/AuthContext';
 import { Plus, X, Search } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const ForumPage = () => {
     const { user, token } = useContext(AuthContext);
@@ -19,7 +20,7 @@ const ForumPage = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/forum');
+                const res = await axios.get(`${API_BASE_URL}/api/forum`);
                 setPosts(res.data);
                 setLoading(false);
             } catch (err) {
@@ -47,7 +48,7 @@ const ForumPage = () => {
                 },
             };
 
-            const res = await axios.post('http://localhost:5000/api/forum', newPost, config);
+            const res = await axios.post(`${API_BASE_URL}/api/forum`, newPost, config);
             setPosts([res.data, ...posts]);
             setIsModalOpen(false);
             setNewPost({ title: '', content: '' });

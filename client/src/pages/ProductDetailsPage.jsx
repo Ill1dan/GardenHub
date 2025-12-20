@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 import AuthContext from '../context/AuthContext';
 
 const ProductDetailsPage = () => {
@@ -25,7 +26,7 @@ const ProductDetailsPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             };
-            const res = await axios.put(`http://localhost:5000/api/shop/${id}/stock`, { quantity: Number(stockToAdd) }, config);
+            const res = await axios.put(`${API_BASE_URL}/api/shop/${id}/stock`, { quantity: Number(stockToAdd) }, config);
             setProduct({ ...product, stock: res.data.stock });
             setStockToAdd('');
         } catch (error) {
@@ -43,7 +44,7 @@ const ProductDetailsPage = () => {
                         Authorization: `Bearer ${token}`
                     }
                 };
-                await axios.delete(`http://localhost:5000/api/shop/${id}`, config);
+                await axios.delete(`${API_BASE_URL}/api/shop/${id}`, config);
                 navigate('/shop');
             } catch (error) {
                 console.error("Failed to delete product", error);
@@ -57,12 +58,12 @@ const ProductDetailsPage = () => {
         const fetchProduct = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:5000/api/shop/${id}`);
+                const response = await axios.get(`${API_BASE_URL}/api/shop/${id}`);
                 setProduct(response.data);
 
                 // Fetch related (rudimentary implementation: fetch all and filter by category on client for now)
                 // In a real app, this would be a specific endpoint
-                const allResponse = await axios.get('http://localhost:5000/api/shop');
+                const allResponse = await axios.get(`${API_BASE_URL}/api/shop`);
                 const allItems = allResponse.data;
                 const related = allItems
                     .filter(item => item.category === response.data.category && item._id !== id)

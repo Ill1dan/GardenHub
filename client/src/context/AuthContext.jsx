@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const AuthContext = createContext();
 
@@ -19,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         const checkUser = async () => {
             if (token) {
                 try {
-                    const res = await axios.get('http://localhost:5000/api/users/me');
+                    const res = await axios.get(`${API_BASE_URL}/api/users/me`);
                     setUser(res.data);
                 } catch (error) {
                     console.error('Error fetching user', error);
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const res = await axios.post('http://localhost:5000/api/users/login', {
+            const res = await axios.post(`${API_BASE_URL}/api/users/login`, {
                 email,
                 password,
             });
@@ -54,7 +55,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const res = await axios.post('http://localhost:5000/api/users/register', userData);
+            const res = await axios.post(`${API_BASE_URL}/api/users/register`, userData);
             localStorage.setItem('token', res.data.token);
             setToken(res.data.token);
             setUser(res.data);

@@ -5,6 +5,7 @@ import AuthContext from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const ShopPage = () => {
     // State for filters
@@ -34,7 +35,7 @@ const ShopPage = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                let url = 'http://localhost:5000/api/shop';
+                let url = `${API_BASE_URL} /api/shop`;
                 const params = new URLSearchParams();
 
                 if (sortBy === 'trending') {
@@ -45,7 +46,7 @@ const ShopPage = () => {
                 }
 
                 if (params.toString()) {
-                    url += `?${params.toString()}`;
+                    url += `? ${params.toString()} `;
                 }
 
                 console.log('Fetching products from:', url);
@@ -66,8 +67,8 @@ const ShopPage = () => {
     const handleAddItem = async (e) => {
         e.preventDefault();
         try {
-            const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.post('http://localhost:5000/api/shop', newItem, config);
+            const config = { headers: { Authorization: `Bearer ${token} ` } };
+            await axios.post(`${API_BASE_URL} /api/shop`, newItem, config);
             setShowAddItemModal(false);
             setNewItem({ name: '', price: '', stock: '', category: 'Flowers', description: '', image_url: '' });
             alert('Item added successfully!');
@@ -81,8 +82,8 @@ const ShopPage = () => {
 
     const handleAddStock = async (id) => {
         try {
-            const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put(`http://localhost:5000/api/shop/${id}/stock`, { quantity: stockToAdd }, config);
+            const config = { headers: { Authorization: `Bearer ${token} ` } };
+            await axios.put(`${API_BASE_URL} /api/shop / ${id}/stock`, { quantity: stockToAdd }, config);
             setUpdatingStock(null);
             setStockToAdd('');
             alert('Stock updated!');
@@ -98,7 +99,7 @@ const ShopPage = () => {
         if (window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
             try {
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`http://localhost:5000/api/shop/${productId}`, config);
+                await axios.delete(`${API_BASE_URL}/api/shop/${productId}`, config);
                 // Immediately update local state
                 setProducts(prev => prev.filter(p => p._id !== productId));
                 alert('Product deleted successfully');
