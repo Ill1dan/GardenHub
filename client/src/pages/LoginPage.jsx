@@ -84,7 +84,7 @@ const LoginPage = () => {
                         </button>
 
                         <button
-                            onClick={() => { setEmail('admin@gardenhub.com'); setPassword('adminpassword'); }}
+                            onClick={() => { setEmail('admin@gardenhub.com'); setPassword('password123'); }}
                             className="text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 text-xs flex justify-between items-center group"
                         >
                             <div>
