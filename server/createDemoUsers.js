@@ -28,6 +28,13 @@ const createDemoUsers = async () => {
                 password: hashedPassword,
                 role: 'gardener',
                 phone: '555-000-0002'
+            },
+            {
+                name: 'Demo Admin',
+                email: 'admin@gardenhub.com',
+                password: hashedPassword,
+                role: 'admin',
+                phone: '555-000-0000'
             }
         ];
 
