@@ -7,7 +7,7 @@ import User from '../models/User.js';
 export const getAllPosts = async (req, res) => {
     try {
         const posts = await ForumPost.find()
-            .populate('user_id', 'name email')
+            .populate('user_id', 'name email profilePicture')
             .sort({ createdAt: -1 });
         res.json(posts);
     } catch (error) {
@@ -28,7 +28,7 @@ export const createPost = async (req, res) => {
             content,
         });
 
-        const populatedPost = await ForumPost.findById(post._id).populate('user_id', 'name email');
+        const populatedPost = await ForumPost.findById(post._id).populate('user_id', 'name email profilePicture');
 
         res.status(201).json(populatedPost);
     } catch (error) {
