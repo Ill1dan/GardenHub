@@ -9,6 +9,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ShopPage from './pages/ShopPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import RegionalGardening from './pages/RegionalGardening';
+import ProblemsPage from './pages/ProblemsPage';
 import GardenerPage from './pages/GardenerPage';
 import UserProfile from './pages/UserProfile';
 import ForumPage from './pages/ForumPage';
@@ -32,6 +33,7 @@ function App() {
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/shop/:id" element={<ProductDetailsPage />} />
           <Route path="/regional-gardening" element={<RegionalGardening />} />
+          <Route path="/problems" element={<ProblemsPage />} />
 
           {/* Viewer Dashboard: Only for Viewers */}
           <Route

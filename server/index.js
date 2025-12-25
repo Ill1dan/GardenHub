@@ -7,6 +7,7 @@ import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import shopRoutes from './routes/shopRoutes.js';
 import forumRoutes from './routes/forumRoutes.js';
+import problemRoutes from './routes/problemRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -20,6 +21,7 @@ app.use(cors());
 app.use('/api/users', userRoutes);
 app.use('/api/shop', shopRoutes);
 app.use('/api/forum', forumRoutes);
+app.use('/api/problems', problemRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
