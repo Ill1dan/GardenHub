@@ -5,6 +5,7 @@ import { Ruler, TreePine, DollarSign, Send, CheckCircle, User as UserIcon, X, Ma
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 
 const ManualServicePage = () => {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ const ManualServicePage = () => {
         // Fetch Gardeners
         const fetchGardeners = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/users/gardeners');
+                const res = await axios.get(`${API_BASE_URL}/api/users/gardeners`);
                 setGardeners(res.data);
                 setLoadingGardeners(false);
             } catch (error) {
@@ -73,7 +74,7 @@ const ManualServicePage = () => {
                 }
             };
 
-            await axios.post('http://localhost:5000/api/services/request', {
+            await axios.post(`${API_BASE_URL}/api/services/request`, {
                 service_type: 'manual',
                 gardener_id: selectedGardener._id,
                 custom_details: {

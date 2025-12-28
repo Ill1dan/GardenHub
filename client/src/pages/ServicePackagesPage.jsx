@@ -6,6 +6,8 @@ import { Check, Star, ArrowRight, Loader, X, User } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
+import { API_BASE_URL } from '../config';
+
 const ServicePackagesPage = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -24,8 +26,8 @@ const ServicePackagesPage = () => {
         const fetchData = async () => {
             try {
                 const [pkgRes, gardenerRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/services/packages'),
-                    axios.get('http://localhost:5000/api/users/gardeners')
+                    axios.get(`${API_BASE_URL}/api/services/packages`),
+                    axios.get(`${API_BASE_URL}/api/users/gardeners`)
                 ]);
                 setPackages(pkgRes.data);
                 setGardeners(gardenerRes.data);
@@ -61,7 +63,7 @@ const ServicePackagesPage = () => {
                 }
             };
 
-            await axios.post('http://localhost:5000/api/services/request', {
+            await axios.post(`${API_BASE_URL}/api/services/request`, {
                 service_type: 'package',
                 package_id: selectedPackage._id,
                 gardener_id: selectedGardener._id,
