@@ -37,17 +37,28 @@ const GardenerPage = () => {
         setFilteredGardeners(results);
     }, [searchTerm, gardeners]);
 
-    // Reliable public garden images from Unsplash
+    // Reliable garden/plant images
     const coverImages = [
-        "https://images.unsplash.com/photo-1558905619-fb07143ddf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // Leaves/Green
-        "https://images.unsplash.com/photo-1416879895691-30ada0526097?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // Greenhouse
-        "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // Garden tools
-        "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // Garden path
-        "https://images.unsplash.com/photo-1598902108854-10e335adac99?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // Indoor
-        "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // Flowers
+        "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=800&q=80", // Garden Path (Verified)
+        "https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=800&q=80", // Tomato/Garden
+        "https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?auto=format&fit=crop&w=800&q=80", // Rose/Start
+        "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=800&q=80", // Cucumber/Greenery
+        "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=800&q=80", // Lettuce/Greenery
+        "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=800&q=80", // Flowers
+        "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=800&q=80", // Garden Path (Repeated)
+        "https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=800&q=80", // Tomato/Garden (Repeated)
+        "https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?auto=format&fit=crop&w=800&q=80", // Rose/Start (Repeated)
+        "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=800&q=80", // Cucumber/Greenery (Repeated)
+        "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=800&q=80", // Lettuce/Greenery (Repeated)
+        "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=800&q=80", // Flowers (Repeated)
     ];
 
-    const getCoverImage = (index) => coverImages[index % coverImages.length];
+    const getCoverImage = (gardener) => {
+        if (!gardener || !gardener._id) return coverImages[0];
+        // Use the sum of character codes of the ID to get a consistent index
+        const sum = gardener._id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        return coverImages[sum % coverImages.length];
+    };
 
     const getMockSkills = (index) => {
         const skillsPool = [
@@ -150,7 +161,8 @@ const GardenerPage = () => {
                                     {/* Cover Image */}
                                     <div className="h-40 relative overflow-hidden bg-gradient-to-br from-green-500 to-emerald-700">
                                         <img
-                                            src={getCoverImage(index)}
+                                            key={getCoverImage(gardener)}
+                                            src={getCoverImage(gardener)}
                                             alt="Garden background"
                                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                             onError={(e) => e.target.style.display = 'none'}

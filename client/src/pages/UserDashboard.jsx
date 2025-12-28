@@ -36,25 +36,25 @@ const UserDashboard = () => {
                             title="My Garden"
                             description="Track your plants, manage watering schedules, and monitor growth."
                             icon={Sprout}
-                            onClick={() => { }}
+                            onClick={() => navigate('/plant-care')}
                         />
                         <FeatureCard
                             title="Identify Problem"
                             description="Snap a photo to detect diseases or pests instantly."
                             icon={Zap}
-                            onClick={() => { }}
+                            onClick={() => navigate('/problems')}
                         />
                         <FeatureCard
                             title="Shop Plants"
                             description="Browse our curated collection of seeds, tools, and plants."
                             icon={ShoppingBag}
-                            onClick={() => { }}
+                            onClick={() => navigate('/shop')}
                         />
                         <FeatureCard
                             title="Book Gardener"
                             description="Hire a professional to help maintain your green space."
                             icon={Shovel}
-                            onClick={() => { }}
+                            onClick={() => navigate('/services')}
                         />
                     </div>
                 </section>

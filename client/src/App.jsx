@@ -18,6 +18,7 @@ import ServicePage from './pages/ServicePage';
 import ServicePackagesPage from './pages/ServicePackagesPage';
 import ManualServicePage from './pages/ManualServicePage';
 import ChatPage from './pages/ChatPage';
+import PlantCarePage from './pages/PlantCarePage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -43,6 +44,15 @@ function App() {
           <Route path="/regional-gardening" element={<RegionalGardening />} />
           <Route path="/problems" element={<ProblemsPage />} />
           <Route path="/membership" element={<MembershipPage />} />
+
+          <Route
+            path="/plant-care"
+            element={
+              <ProtectedRoute allowedRoles={['viewer']}>
+                <PlantCarePage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Viewer Dashboard: Only for Viewers */}
           <Route

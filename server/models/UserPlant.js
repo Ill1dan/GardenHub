@@ -20,6 +20,18 @@ const userPlantSchema = new mongoose.Schema({
     custom_prune_days: {
         type: Number,
     },
+    last_watered: {
+        type: Date,
+        default: Date.now
+    },
+    last_fertilized: {
+        type: Date,
+        default: Date.now
+    },
+    last_pruned: {
+        type: Date,
+        default: Date.now
+    },
 }, { timestamps: true });
 
 const UserPlant = mongoose.model('UserPlant', userPlantSchema);
