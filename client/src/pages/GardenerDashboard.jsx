@@ -1,17 +1,75 @@
-import { Briefcase, DollarSign, Star, AlertCircle } from 'lucide-react';
+import { Briefcase, DollarSign, Star, AlertCircle, Calendar, CheckCircle, Clock } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FeatureCard from '../components/Dashboard/FeatureCard';
 import WeatherCard from '../components/Dashboard/WeatherCard';
 import ScheduleList from '../components/Dashboard/ScheduleList';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
+import axios from 'axios';
 
 const GardenerDashboard = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
     const firstName = user ? user.name.split(' ')[0] : 'Gardener';
+
+    // State for dynamic requests
+    const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 3;
+
+    useEffect(() => {
+        const fetchRequests = async () => {
+            try {
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                };
+                const res = await axios.get('http://localhost:5000/api/services/gardener-requests', config);
+                // Filter for pending requests for the "New Job Requests" section
+                setRequests(res.data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching requests:', error);
+                setLoading(false);
+            }
+        };
+
+        if (user) {
+            fetchRequests();
+        }
+    }, [user]);
+
+    const handleAcceptRequest = async (id) => {
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            };
+            await axios.put(`http://localhost:5000/api/services/request/${id}/status`, { status: 'approved' }, config);
+
+            // Refresh requests
+            const updatedRequests = requests.map(req =>
+                req._id === id ? { ...req, status: 'approved' } : req
+            );
+            setRequests(updatedRequests);
+            alert('Job Accepted!');
+
+        } catch (error) {
+            console.error('Error accepting job:', error);
+            alert('Failed to accept job');
+        }
+    };
+
+    const pendingRequests = requests.filter(req => req.status === 'pending');
+    const displayedRequests = requests.filter(req => req.status === 'pending' || req.status === 'approved');
+    const activeJobs = requests.filter(req => req.status === 'approved' || req.status === 'in_progress');
 
     return (
         <div className="min-h-screen flex flex-col bg-[#f3f4f6] font-sans text-gray-900 selection:bg-green-100 selection:text-green-900">
@@ -37,8 +95,8 @@ const GardenerDashboard = () => {
                                     <h3 className="text-gray-500 text-sm font-medium uppercase">Active Jobs</h3>
                                     <Briefcase className="h-5 w-5 text-green-500" />
                                 </div>
-                                <p className="text-2xl font-bold text-gray-900">3</p>
-                                <p className="text-xs text-green-600 mt-1 font-medium">+1 new request</p>
+                                <p className="text-2xl font-bold text-gray-900">{activeJobs.length}</p>
+                                <p className="text-xs text-green-600 mt-1 font-medium">{pendingRequests.length} new request(s)</p>
                             </div>
 
                             <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-blue-500">
@@ -60,40 +118,85 @@ const GardenerDashboard = () => {
                             </div>
                         </div>
 
-                        {/* Recent Requests List (New functionality) */}
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        {/* Recent Requests List (Dynamic) */}
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 min-h-[250px]">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="font-bold text-gray-800 text-lg">New Job Requests</h3>
-                                <div className="flex items-center text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full cursor-pointer hover:bg-green-100 transition">
-                                    <AlertCircle className="h-4 w-4 mr-1" />
-                                    2 Urgent
-                                </div>
+                                {pendingRequests.length > 0 && (
+                                    <div className="flex items-center text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                                        <AlertCircle className="h-4 w-4 mr-1" />
+                                        {pendingRequests.length} Pending
+                                    </div>
+                                )}
                             </div>
+
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-green-200 transition-colors cursor-pointer bg-gray-50/50">
-                                    <div className="flex items-center">
-                                        <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold mr-4">
-                                            JS
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-800">John Smith</h4>
-                                            <p className="text-sm text-gray-500">Full Garden Cleanup • 5km away</p>
-                                        </div>
+                                {loading && <p className="text-gray-500">Loading requests...</p>}
+
+                                {!loading && displayedRequests.length === 0 && (
+                                    <div className="text-center py-8 text-gray-500">
+                                        <p>No active requests.</p>
                                     </div>
-                                    <button className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition">Accept</button>
-                                </div>
-                                <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-green-200 transition-colors cursor-pointer bg-gray-50/50">
-                                    <div className="flex items-center">
-                                        <div className="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-bold mr-4">
-                                            AL
+                                )}
+
+                                {displayedRequests.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((req) => (
+                                    <div key={req._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-green-200 transition-colors bg-gray-50/50 gap-4">
+                                        <div className="flex items-center">
+                                            <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold mr-4 flex-shrink-0">
+                                                {req.user_id.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-gray-800">{req.user_id.name}</h4>
+                                                <p className="text-sm text-gray-500">
+                                                    {req.service_type === 'package' ? req.package_id.name : 'Custom Service'}
+                                                    {req.date && ` • ${new Date(req.date).toLocaleDateString()}`}
+                                                </p>
+                                                {req.service_type === 'manual' && (
+                                                    <p className="text-xs text-gray-500 mt-1 italic max-w-xs truncate">
+                                                        "{req.custom_details?.requirements}"
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-800">Alice Lee</h4>
-                                            <p className="text-sm text-gray-500">Tree Pruning • 2.5km away</p>
-                                        </div>
+
+                                        {req.status === 'pending' ? (
+                                            <button
+                                                onClick={() => handleAcceptRequest(req._id)}
+                                                className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition w-full sm:w-auto text-center"
+                                            >
+                                                Accept
+                                            </button>
+                                        ) : (
+                                            <div className="flex items-center text-green-700 bg-green-50 px-4 py-2 rounded-lg text-sm font-medium border border-green-100 w-full sm:w-auto justify-center">
+                                                <CheckCircle className="h-4 w-4 mr-2" />
+                                                Accepted
+                                            </div>
+                                        )}
                                     </div>
-                                    <button className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition">Accept</button>
-                                </div>
+                                ))}
+
+                                {/* Pagination Controls */}
+                                {!loading && displayedRequests.length > itemsPerPage && (
+                                    <div className="flex justify-between items-center pt-2 mt-4 border-t border-gray-100">
+                                        <button
+                                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                            disabled={currentPage === 1}
+                                            className={`text-sm font-medium px-3 py-1 rounded-md ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-green-600 hover:bg-green-50 cursor-pointer'}`}
+                                        >
+                                            Previous
+                                        </button>
+                                        <span className="text-xs text-gray-500">
+                                            Page {currentPage} of {Math.ceil(displayedRequests.length / itemsPerPage)}
+                                        </span>
+                                        <button
+                                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(displayedRequests.length / itemsPerPage)))}
+                                            disabled={currentPage === Math.ceil(displayedRequests.length / itemsPerPage)}
+                                            className={`text-sm font-medium px-3 py-1 rounded-md ${currentPage === Math.ceil(displayedRequests.length / itemsPerPage) ? 'text-gray-300 cursor-not-allowed' : 'text-green-600 hover:bg-green-50 cursor-pointer'}`}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

@@ -13,6 +13,9 @@ import ProblemsPage from './pages/ProblemsPage';
 import GardenerPage from './pages/GardenerPage';
 import UserProfile from './pages/UserProfile';
 import ForumPage from './pages/ForumPage';
+import ServicePage from './pages/ServicePage';
+import ServicePackagesPage from './pages/ServicePackagesPage';
+import ManualServicePage from './pages/ManualServicePage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -30,6 +33,9 @@ function App() {
             }
           />
           <Route path="/gardeners" element={<GardenerPage />} />
+          <Route path="/services" element={<ServicePage />} />
+          <Route path="/services/packages" element={<ServicePackagesPage />} />
+          <Route path="/services/manual" element={<ManualServicePage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/shop/:id" element={<ProductDetailsPage />} />
           <Route path="/regional-gardening" element={<RegionalGardening />} />
