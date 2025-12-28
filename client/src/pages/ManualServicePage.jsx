@@ -129,6 +129,11 @@ const ManualServicePage = () => {
             <div className="bg-emerald-800 py-12 text-center text-white">
                 <h1 className="text-3xl md:text-4xl font-extrabold">Build Your Green Space</h1>
                 <p className="mt-2 text-emerald-100">Tell us what you need, and pick an expert to make it happen.</p>
+                {user?.isPremium && (
+                    <div className="mt-4 bg-white/20 backdrop-blur-sm inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium text-white border border-white/30">
+                        <span className="mr-2">✨</span> 30% Premium Discount will be applied to your final quote
+                    </div>
+                )}
             </div>
 
             <div className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 w-full py-12">

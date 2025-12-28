@@ -13,6 +13,7 @@ import ProblemsPage from './pages/ProblemsPage';
 import GardenerPage from './pages/GardenerPage';
 import UserProfile from './pages/UserProfile';
 import ForumPage from './pages/ForumPage';
+import MembershipPage from './pages/MembershipPage';
 import ServicePage from './pages/ServicePage';
 import ServicePackagesPage from './pages/ServicePackagesPage';
 import ManualServicePage from './pages/ManualServicePage';
@@ -40,6 +41,7 @@ function App() {
           <Route path="/shop/:id" element={<ProductDetailsPage />} />
           <Route path="/regional-gardening" element={<RegionalGardening />} />
           <Route path="/problems" element={<ProblemsPage />} />
+          <Route path="/membership" element={<MembershipPage />} />
 
           {/* Viewer Dashboard: Only for Viewers */}
           <Route

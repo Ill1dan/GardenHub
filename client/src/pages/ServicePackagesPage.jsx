@@ -141,7 +141,16 @@ const ServicePackagesPage = () => {
                                     <div className="border-t border-gray-100 pt-6 flex items-center justify-between">
                                         <div>
                                             <span className="text-xs text-gray-500 uppercase font-semibold">Price</span>
-                                            <div className="text-2xl font-bold text-green-700">৳{pkg.price.toLocaleString()}</div>
+                                            <div className="text-2xl font-bold text-green-700 flex flex-col">
+                                                {user?.isPremium ? (
+                                                    <>
+                                                        <span className="text-gray-400 line-through text-sm font-normal">৳{pkg.price.toLocaleString()}</span>
+                                                        <span>৳{(pkg.price * 0.7).toLocaleString()}</span>
+                                                    </>
+                                                ) : (
+                                                    <span>৳{pkg.price.toLocaleString()}</span>
+                                                )}
+                                            </div>
                                         </div>
                                         <button
                                             onClick={() => handleSelectPackage(pkg)}

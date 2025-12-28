@@ -443,8 +443,15 @@ const ShopPage = () => {
                                                     e.target.src = 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=600'; // Generic garden fallback
                                                 }}
                                             />
-                                            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-green-700 shadow-sm">
-                                                ${product.price.toFixed(2)}
+                                            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-green-700 shadow-sm flex flex-col items-end">
+                                                {user?.isPremium ? (
+                                                    <>
+                                                        <span className="text-gray-400 line-through text-[10px]">${product.price.toFixed(2)}</span>
+                                                        <span className="text-green-700">${(product.price * 0.7).toFixed(2)}</span>
+                                                    </>
+                                                ) : (
+                                                    <span>${product.price.toFixed(2)}</span>
+                                                )}
                                             </div>
                                             {product.stock < 10 && (
                                                 <div className="absolute top-3 left-3 bg-red-500/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-white shadow-sm">

@@ -49,6 +49,7 @@ const registerUser = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            isPremium: user.isPremium,
             profilePicture: user.profilePicture,
             token: generateToken(user._id, user.role),
         });
@@ -76,6 +77,7 @@ const loginUser = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            isPremium: user.isPremium,
             profilePicture: user.profilePicture,
             token: generateToken(user._id, user.role),
         });
@@ -219,6 +221,7 @@ const updateUserProfile = async (req, res) => {
                 role: updatedUser.role,
                 phone: updatedUser.phone,
                 profilePicture: updatedUser.profilePicture,
+                isPremium: updatedUser.isPremium,
                 token: generateToken(updatedUser._id, updatedUser.role),
             });
         } else {
@@ -229,4 +232,36 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, getMe, getAllUsers, getGardeners, updateUserStatus, updateUserRole, getDashboardStats, getSystemLogs, updateUserProfile };
+// @desc    Upgrade user to premium
+// @route   PUT /api/users/upgrade
+// @access  Private
+const upgradeToPremium = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            user.isPremium = true;
+
+            // In a real app, we would handle payment processing here
+
+            const updatedUser = await user.save();
+
+            res.json({
+                _id: updatedUser._id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+                role: updatedUser.role,
+                phone: updatedUser.phone,
+                profilePicture: updatedUser.profilePicture,
+                isPremium: updatedUser.isPremium,
+                token: generateToken(updatedUser._id, updatedUser.role),
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+export { registerUser, loginUser, getMe, getAllUsers, getGardeners, updateUserStatus, updateUserRole, getDashboardStats, getSystemLogs, updateUserProfile, upgradeToPremium };

@@ -160,7 +160,17 @@ const ProductDetailsPage = () => {
                                 <span className="text-gray-500 text-sm">{product.sales} sold</span>
                             </div>
 
-                            <div className="text-3xl font-bold text-gray-900 mb-8">${product.price.toFixed(2)}</div>
+                            <div className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                                {user?.isPremium ? (
+                                    <>
+                                        <span className="text-gray-400 line-through text-2xl">${product.price.toFixed(2)}</span>
+                                        <span className="text-green-600">${(product.price * 0.7).toFixed(2)}</span>
+                                        <span className="text-xs font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-1 rounded-full">Premium Price</span>
+                                    </>
+                                ) : (
+                                    <span>${product.price.toFixed(2)}</span>
+                                )}
+                            </div>
 
                             <p className="text-gray-600 text-lg leading-relaxed mb-8">
                                 {product.description}
@@ -242,7 +252,16 @@ const ProductDetailsPage = () => {
                                     </div>
                                     <div className="p-4">
                                         <h4 className="font-bold text-gray-900 group-hover:text-green-600 transition-colors truncate">{related.name}</h4>
-                                        <p className="text-gray-500 text-sm mt-1">${related.price.toFixed(2)}</p>
+                                        <div className="text-gray-500 text-sm mt-1">
+                                            {user?.isPremium ? (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="line-through text-xs">${related.price.toFixed(2)}</span>
+                                                    <span className="text-green-600 font-bold">${(related.price * 0.7).toFixed(2)}</span>
+                                                </div>
+                                            ) : (
+                                                <span>${related.price.toFixed(2)}</span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </Link>

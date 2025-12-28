@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, getMe, getAllUsers, getGardeners, updateUserStatus, updateUserRole, getDashboardStats, getSystemLogs, updateUserProfile } from '../controllers/userController.js';
+import { registerUser, loginUser, getMe, getAllUsers, getGardeners, updateUserStatus, updateUserRole, getDashboardStats, getSystemLogs, updateUserProfile, upgradeToPremium } from '../controllers/userController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -9,6 +9,7 @@ router.post('/login', loginUser);
 router.get('/me', protect, getMe);
 router.get('/gardeners', getGardeners);
 router.put('/profile', protect, updateUserProfile);
+router.put('/upgrade', protect, upgradeToPremium);
 
 // Admin Routes
 router.get('/', protect, admin, getAllUsers);
