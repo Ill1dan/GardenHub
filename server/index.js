@@ -9,6 +9,7 @@ import shopRoutes from './routes/shopRoutes.js';
 import forumRoutes from './routes/forumRoutes.js';
 import problemRoutes from './routes/problemRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -24,6 +25,7 @@ app.use('/api/shop', shopRoutes);
 app.use('/api/forum', forumRoutes);
 app.use('/api/problems', problemRoutes);
 app.use('/api/services', serviceRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {

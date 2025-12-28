@@ -17,6 +17,7 @@ import MembershipPage from './pages/MembershipPage';
 import ServicePage from './pages/ServicePage';
 import ServicePackagesPage from './pages/ServicePackagesPage';
 import ManualServicePage from './pages/ManualServicePage';
+import ChatPage from './pages/ChatPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -76,6 +77,14 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forum" element={<ForumPage />} />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute allowedRoles={['viewer', 'gardener', 'expert', 'admin']}>
+                <ChatPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>

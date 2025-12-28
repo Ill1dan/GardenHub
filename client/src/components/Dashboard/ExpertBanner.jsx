@@ -1,6 +1,9 @@
 import { MessageSquare, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ExpertBanner = () => {
+    const navigate = useNavigate();
+
     return (
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-500 shadow-lg shadow-emerald-200">
             {/* Background Pattern */}
@@ -22,7 +25,10 @@ const ExpertBanner = () => {
                 </div>
 
                 <div className="flex-shrink-0">
-                    <button className="bg-white text-emerald-700 px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 hover:bg-emerald-50 transition-all duration-300 flex items-center group cursor-pointer">
+                    <button
+                        onClick={() => navigate('/chat')}
+                        className="bg-white text-emerald-700 px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 hover:bg-emerald-50 transition-all duration-300 flex items-center group cursor-pointer"
+                    >
                         Chat with an Expert
                         <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
                     </button>

@@ -3,7 +3,9 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FeatureCard from '../components/Dashboard/FeatureCard';
 import WeatherCard from '../components/Dashboard/WeatherCard';
+
 import ScheduleList from '../components/Dashboard/ScheduleList';
+import Inbox from '../components/Dashboard/Inbox';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
@@ -227,6 +229,7 @@ const GardenerDashboard = () => {
                     <div className="space-y-6">
                         <WeatherCard />
                         <ScheduleList />
+                        <Inbox />
                     </div>
                 </div>
 
