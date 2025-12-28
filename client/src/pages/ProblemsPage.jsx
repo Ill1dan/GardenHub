@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Search, Sprout, Bug, AlertTriangle, Leaf, ChevronDown, Activity, Sparkles, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const ProblemsPage = () => {
     // State
@@ -24,7 +25,7 @@ const ProblemsPage = () => {
     useEffect(() => {
         const fetchFilters = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/problems/filters');
+                const res = await fetch(`${API_BASE_URL}/api/problems/filters`);
                 const data = await res.json();
                 setFilterOptions(data);
             } catch (error) {
@@ -52,7 +53,7 @@ const ProblemsPage = () => {
             queryParams.append('page', page);
             queryParams.append('limit', 9);
 
-            const res = await fetch(`http://localhost:5000/api/problems/search?${queryParams.toString()}`);
+            const res = await fetch(`${API_BASE_URL}/api/problems/search?${queryParams.toString()}`);
             const data = await res.json();
 
             // Handle both old and new API response formats safely
