@@ -134,7 +134,7 @@ const ForumPage = () => {
                                     key={post._id}
                                     author={post.user_id ? post.user_id.name : 'Unknown User'}
                                     authorImage={post.user_id && post.user_id.profilePicture ? post.user_id.profilePicture : null}
-                                    time={new Date(post.createdAt).toLocaleDateString()}
+                                    time={`${new Date(post.createdAt).toLocaleDateString()} ${new Date(post.createdAt).toLocaleTimeString()}`}
                                     title={post.title}
                                     content={post.content}
                                     tags={['Gardening']}
