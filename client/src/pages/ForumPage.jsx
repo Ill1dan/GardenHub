@@ -134,7 +134,7 @@ const ForumPage = () => {
                                     key={post._id}
                                     author={post.user_id ? post.user_id.name : 'Unknown User'}
                                     authorImage={post.user_id && post.user_id.profilePicture ? post.user_id.profilePicture : null}
-                                    time={timeAgo(post.createdAt)}
+                                    time={post.createdAt}
                                     title={post.title}
                                     content={post.content}
                                     tags={['Gardening']}
